@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="Scripts/jquery-3.6.0.js"></script>
+    <script src="Scripts/jquery-ui.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <link href="Content/jquery-ui.css" rel="stylesheet" />
+    <link href="Content/bootstrap.rtl.css" rel="stylesheet" />
+    <link href="Content/font-awesome.css" rel="stylesheet" />
+    <title></title>
+</head>
+<body style="direction:rtl; background-color:#f0f0f0;">
+    <script>
+        var data = {
+            Timesheets: [1, 5],
+            Courses: [{
+                Id: 1,
+                Title: "برنامه سازی 1",
+                Credit: 3,
+                Cost: 1580000,
+                PermitType: 0, // 0 = allowed   1 = passed     2 = pre_requirement
+                Professors: [
+                    {
+                        Id: 1,
+                        Title: "استاد مرتضوی بزرگ",
+                        Timesheets: [{
+                            Id: 1,
+                            TimeType: 0,
+                            WeekDay: 0
+                        }, {
+                            Id: 2,
+                            TimeType: 0,
+                            WeekDay: 2
+                        }]
+                    }, {
+                        Id: 2,
+                        Title: "استاد کاظمی",
+                        Timesheets: [{
+                            Id: 3,
+                            TimeType: 1,
+                            WeekDay: 0
+                        }, {
+                            Id: 4,
+                            TimeType: 1,
+                            WeekDay: 1
+                        }]
+                    }
+                ]
+            }, {
+                Id: 2,
+                Title: "مدار منطقی",
+                Credit: 3,
+                Cost: 1580000,
+                PermitType: 0, // 0 = allowed   1 = passed     2 = pre_requirement
+                Professors: [
+                    {
+                        Id: 1,
+                        Title: "استاد مرتضوی بزرگ",
+                        Timesheets: [{
+                            Id: 5,
+                            TimeType: 1,
+                            WeekDay: 0
+                        }, {
+                            Id: 6,
+                            TimeType: 1,
+                            WeekDay: 2
+                        }]
+                    }, {
+                        Id: 2,
+                        Title: "استاد کاظمی",
+                        Timesheets: [{
+                            Id: 3,
+                            TimeType: 0,
+                            WeekDay: 0
+                        }, {
+                            Id: 2,
+                            TimeType: 0,
+                            WeekDay: 1
+                        }]
+                    }
+                ]
+            }
+            ]
+        };
+        
+    </script>
+    <div class="container border mt-3 pt-3" style="background-color:#fff;">
+        <div class="row">
+            <div class="col-sm-3">
+                <div courses></div>
+            </div>
+            <div class="col-sm-9">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>8-10</th>
+                            <th>10-12</th>
+                            <th>12-14</th>
+                            <th>14-16</th>
+                            <th>16-18</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-id="0">
+                            <td>شنبه</td>
+                            <td data-id="0"><span></span></td>
+                            <td data-id="1"><span></span></td>
+                            <td data-id="2"><span></span></td>
+                            <td data-id="3"><span></span></td>
+                            <td data-id="4"><span></span></td>
+                        </tr>
+                        <tr data-id="1">
+                            <td>یکشنبه</td>
+                            <td data-id="0"><span></span></td>
+                            <td data-id="1"><span></span></td>
+                            <td data-id="2"><span></span></td>
+                            <td data-id="3"><span></span></td>
+                            <td data-id="4"><span></span></td>
+                        </tr>
+                        <tr data-id="2">
+                            <td>دوشنبه</td>
+                            <td data-id="0"><span></span></td>
+                            <td data-id="1"><span></span></td>
+                            <td data-id="2"><span></span></td>
+                            <td data-id="3"><span></span></td>
+                            <td data-id="4"><span></span></td>
+                        </tr>
+                        <tr data-id="3">
+                            <td>سه شنبه</td>
+                            <td data-id="0"><span></span></td>
+                            <td data-id="1"><span></span></td>
+                            <td data-id="2"><span></span></td>
+                            <td data-id="3"><span></span></td>
+                            <td data-id="4"><span></span></td>
+                        </tr>
+                        <tr data-id="4">
+                            <td>چهارشنبه</td>
+                            <td data-id="0"><span></span></td>
+                            <td data-id="1"><span></span></td>
+                            <td data-id="2"><span></span></td>
+                            <td data-id="3"><span></span></td>
+                            <td data-id="4"><span></span></td>
+                        </tr>
+                        <tr data-id="5">
+                            <td>پنجشنبه</td>
+                            <td data-id="0"><span></span></td>
+                            <td data-id="1"><span></span></td>
+                            <td data-id="2"><span></span></td>
+                            <td data-id="3"><span></span></td>
+                            <td data-id="4"><span></span></td>
+                        </tr>
+                        <tr data-id="6">
+                            <td>جمعه</td>
+                            <td data-id="0"><span></span></td>
+                            <td data-id="1"><span></span></td>
+                            <td data-id="2"><span></span></td>
+                            <td data-id="3"><span></span></td>
+                            <td data-id="4"><span></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var coursesDiv = $("div[courses]");
+            $(data.Courses).each(function () {
+                var course = this;
+                $(coursesDiv).append(`<div data-id="${course.Id}" data-permit="${this.PermitType}"><span>${this.Title}</span></div>`);
+            });
+            $(coursesDiv).droppable().children().each(function () {
+                course = this;
+                $(course).draggable({
+                    revert: "invalid",
+                    drag: function (a, b) {                        
+                        var d = data.Courses.find(x => x.Id == $(b.helper[0]).data("id"));
+                        for (var pi in d.Professors) {
+                            var prof = d.Professors[pi];
+                            var ch = (10 + ((pi * 7) % 5)).toString(16);
+                            var color = "#ffaaaa";
+                            if (pi % 3 == 0)
+                                color = `#${ch}${ch}ffee`;
+                            else if (pi % 3 == 1)
+                                color = `#eeff${ch}${ch}`;
+                            $(prof.Timesheets).each(function () {
+                                t = this;
+                                var sel = `table > tbody > tr[data-id="${t.WeekDay}"] > td[data-id="${t.TimeType}"]`;
+                                $(sel).css("background-color", color).attr("right", "right").children("span").text(prof.Title);
+                                $(sel).droppable({
+                                    drop: function (a, b) {
+                                        //$(b.helper[0]).css("width", "0%"); //.html('<i class="fa fa-map-pin"></i>');
+                                        $(b.helper[0]).css("display", "initial");
+                                    }
+                                });
+                            });
+                        }
+                    }
+                });
+            });
+            //$("table").droppable({
+            //    classes: {
+            //        "ui-droppable-active": "ui-state-highlight"
+            //    },
+            //    accept: function (dropElem) {
+            //        var d = data.Courses.find(x => x.Id == $(dropElem).data("id"));
+            //        $(d.Professors).each(function () {
+            //            var prof = this;
+            //            $(prof.Timesheets).each(function () {
+            //                t = this;
+            //                var sel = `table > tbody > tr[data-id="${t.WeekDay}"] > td[data-id="${t.TimeType}"]`;
+            //                $(sel).css("background-color", "#fff").removeAttr("right").children("span").text('');
+            //            });
+            //        });
+            //        return false;
+            //    }
+            //});
+            $("table > tbody > tr[data-id] > td[data-id]").droppable(accept: false);
+        });
+    </script>
+    <style>
+        table > tbody > tr > td[data-id] {
+            max-width: 1px;
+            min-width: 1%;
+        }
+            table > tbody > tr > td[data-id] > span {
+                font-size:small;
+                height: 70px;
+                display:block;
+            }
+        [courses] {
+            border: 1px solid #ddd;
+        }
+        [courses] > div {
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+        }
+            [courses] > div[data-permit="0"]{
+                background-color: #fff;
+            }
+                [courses] > div[data-permit="0"]:hover {
+                    box-shadow: 2px 2px 4px #ddd;
+                    cursor: grab;
+                    user-select: none;
+                    z-index:1;
+                }
+                [courses] > div[data-permit="0"].select{
+                    width:50px;
+                }
+            [courses] > div[data-permit="1"] {
+                background-color: #f5f5f5;
+                border-color: #f5f5f5;
+            }
+            [courses] > div[data-permit="2"] {
+                background-color: #f5e0e0;
+                border-color: #f5e0e0;
+            }
+    </style>
+</body>
+</html>
