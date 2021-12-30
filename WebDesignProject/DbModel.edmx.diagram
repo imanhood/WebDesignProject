@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="daa9347f15c04a4ca027b56506b4d503" Name="Diagram1">
+        <EntityTypeShape EntityType="Database.Cours" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Database.Professor" Width="1.5" PointX="0.75" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="Database.SemesterCours" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Database.Semester" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Database.StudentCours" Width="1.5" PointX="5.25" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Database.Student" Width="1.5" PointX="3" PointY="7.875" IsExpanded="true" />
+        <AssociationConnector Association="Database.FK_SemesterCourses_Courses" ManuallyRouted="false" />
+        <AssociationConnector Association="Database.FK_SemesterCourses_Professors" ManuallyRouted="false" />
+        <AssociationConnector Association="Database.FK_SemesterCourses_Semesters" ManuallyRouted="false" />
+        <AssociationConnector Association="Database.FK_StudentCourses_SemesterCourses" ManuallyRouted="false" />
+        <AssociationConnector Association="Database.FK_Students_Semesters" ManuallyRouted="false" />
+        <AssociationConnector Association="Database.FK_StudentCourses_Students" ManuallyRouted="false" />
+        <AssociationConnector Association="Database.PreCourses" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
