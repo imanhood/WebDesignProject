@@ -166,16 +166,13 @@
     </div>
     <script>
         $(document).ready(function () {
+            var currencyFormat = new Intl.NumberFormat({ style: 'currency' });
             var coursesDiv = $("div[courses]");
             $(data.Courses).each(function () {
                 var course = this;
-                $(coursesDiv).append(`<div data-id="${course.Id}" data-permit="${this.PermitType}"><span>${this.Title}</span></div>`);
+                $(coursesDiv).append(`<div data-id="${course.Id}" data-permit="${this.PermitType}"><span title>${this.Title}</span><br/><span credit>${this.Credit} واحد</span><span cost>${currencyFormat.format(this.Cost)} ریال</span></div>`);
             });
-            $(coursesDiv).droppable({
-                drop: function (a, b) {
-                    $(b.helper[0]).css("display", "inherit");
-                }
-            }).children().each(function () {
+            $(coursesDiv).droppable().children().each(function () {
                 course = this;
                 $(course).draggable({
                     classes: {
@@ -197,9 +194,10 @@
                     start: function (a, b) {
                         if ($(b.helper[0]).is('[landed]')) {
                             $(`table > tbody > tr[data-id="${$(b.helper[0]).data("day")}"] > td[data-id="${$(b.helper[0]).data("time")}"]`).removeAttr("taken");
-                            $(b.helper[0]).removeAttr("landed");
+                            $(b.helper[0]).removeAttr("landed").css("display", "inherit");
                         }
                         var d = data.Courses.find(x => x.Id == $(b.helper[0]).data("id"));
+                        d.Professors.sort();
                         for (var pi in d.Professors) {
                             var prof = d.Professors[pi];
                             var ch = (10 + ((pi * 7) % 5)).toString(16);
@@ -249,7 +247,7 @@
         [courses] > div {
             border: 1px solid #ddd;
             padding: 5px 10px;
-        }
+        }            
             [courses] > div[data-permit="0"]{
                 background-color: #fff;
             }
@@ -267,10 +265,32 @@
                 background-color: #f5e0e0;
                 border-color: #f5e0e0;
             }
+            [courses] > div > span[credit] {
+                font-size: x-small;
+            }
+            [courses] > div > span[cost] {
+                font-size: x-small;
+                float: left;
+            }
+            [courses] > div:is([landed]) > span[credit] {
+                display: none;
+            }
+            [courses] > div:is([landed]) > span[cost] {
+                display: none;
+            }
+            [courses] > div.ui-draggable.ui-draggable-dragging {
+                width: 100px;
+            }
+            [courses] > div.ui-draggable.ui-draggable-dragging > span[credit] {
+                display: none;
+            }
+            [courses] > div.ui-draggable.ui-draggable-dragging > span[cost] {
+                display: none;
+            }
         .ui-droppable.ui-droppable-hover {
             box-shadow: 2px 2px 4px #aaa !important;
             border-width: 3px !important;
-        }
+        }        
     </style>
 </body>
 </html>
