@@ -6,13 +6,13 @@ namespace WebDesignProject
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class Semester
+    //[Serializable]
+    public class Semester
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Semester()
         {
-            SemesterCourses = new HashSet<SemesterCourse>();
-            Students = new HashSet<Student>();
+            //SemesterCourses = new List<SemesterCourse>();
+            //Students = new List<Student>();
         }
 
         public int Id { get; set; }
@@ -21,10 +21,8 @@ namespace WebDesignProject
         [StringLength(256)]
         public string Title { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SemesterCourse> SemesterCourses { get; set; }
+        //public virtual ICollection<SemesterCourse> SemesterCourses { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Student> Students { get; set; }
+        //public virtual ICollection<Student> Students { get; set; }
     }
 }

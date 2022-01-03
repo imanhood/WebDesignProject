@@ -6,8 +6,9 @@ namespace WebDesignProject
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("StudentCourses")]
-    public partial class StudentCourse
+    //[Table("StudentCourses")]
+    //[Serializable]
+    public class StudentCourse
     {
         public int Id { get; set; }
 
@@ -17,8 +18,8 @@ namespace WebDesignProject
 
         public double? Mark { get; set; }
 
-        public virtual SemesterCourse SemesterCours { get; set; }
+        //public virtual SemesterCourse SemesterCours { get; set; }
 
-        public virtual Student Student { get; set; }
+        //public virtual Student Student { get; set; }
     }
 }

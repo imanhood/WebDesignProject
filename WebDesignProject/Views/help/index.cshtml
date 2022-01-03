@@ -1,0 +1,30 @@
+﻿<style>body{font-family:Tahoma; direction:rtl; font-size:20px;} a, a:visited, a:active{color:black; text-decoration:none;}
+    input {
+        direction: ltr;
+        width: 500px; font-size:18px;
+    }</style>
+@{
+    ViewBag.Title = "راهنمای وب سرویس";
+    Layout = null;
+
+
+    var helpItems = new List<List<string>>()
+    {
+        new List<string>{"/students/GetStudents", "دریافت لیست دانشجویان","Get" },
+        new List<string>{ "/students/Get/{studentId}", "دریافت اطلاعات دانشجو با ID", "Get" },
+        new List<string>{ "/students/GetCourses/{studentId}", "دریافت اطلاعات ترم های دانشجو با ID", "Get" },
+    };
+}
+
+<h2>@ViewBag.Title</h2>
+
+<ul>
+    @foreach (var helpx in helpItems)
+    {
+    <li><input type="text" value="/api@(helpx[0])" />
+        <span style="color:red; width:80px;">@helpx[2]</span>
+        <a target="/api@(helpx[0])" href="/api@(helpx[0])">@(helpx[1])</a> </li>
+    }
+</ul>
+
+

@@ -6,10 +6,10 @@ namespace WebDesignProject
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Courses")]
-    public partial class Course
+    //[Table("Courses")]
+    //[Serializable]
+    public class Course
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Course(){}
 
         public int Id { get; set; }

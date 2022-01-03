@@ -4,8 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 
 namespace WebDesignProject {
-    public partial class Model1 : DbContext {
-        public Model1()
+    public partial class SampleDatabase : DbContext {
+        public SampleDatabase()
             : base("name=DbConnection") {
         }
 
@@ -28,31 +28,31 @@ namespace WebDesignProject {
             //    .WithMany(e => e.Courses)
             //    .Map(m => m.ToTable("PreCourses").MapLeftKey("CourseId").MapRightKey("ParentCourseId"));
 
-            modelBuilder.Entity<Professor>()
-                .HasMany(e => e.SemesterCourses)
-                .WithRequired(e => e.Professor)
-                .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<Professor>()
+            //    .HasMany(e => e.SemesterCourses)
+            //    .WithRequired(e => e.Professor)
+            //    .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<SemesterCourse>()
-                .HasMany(e => e.StudentCourses)
-                .WithRequired(e => e.SemesterCours)
-                .HasForeignKey(e => e.SemesterCourseId)
-                .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<SemesterCourse>()
+            //    .HasMany(e => e.StudentCourses)
+            //    .WithRequired(e => e.SemesterCours)
+            //    .HasForeignKey(e => e.SemesterCourseId)
+            //    .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Semester>()
-                .HasMany(e => e.SemesterCourses)
-                .WithRequired(e => e.Semester)
-                .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<Semester>()
+            //    .HasMany(e => e.SemesterCourses)
+            //    .WithRequired(e => e.Semester)
+            //    .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Semester>()
-                .HasMany(e => e.Students)
-                .WithOptional(e => e.Semester)
-                .HasForeignKey(e => e.EnterSemesterId);
+            //modelBuilder.Entity<Semester>()
+            //    .HasMany(e => e.Students)
+            //    .WithOptional(e => e.Semester)
+            //    .HasForeignKey(e => e.EnterSemesterId);
 
-            modelBuilder.Entity<Student>()
-                .HasMany(e => e.StudentCourses)
-                .WithRequired(e => e.Student)
-                .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<Student>()
+            //    .HasMany(e => e.StudentCourses)
+            //    .WithRequired(e => e.Student)
+            //    .WillCascadeOnDelete(false);
         }
     }
 }
