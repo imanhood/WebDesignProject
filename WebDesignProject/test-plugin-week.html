@@ -17,6 +17,7 @@
             Timesheets: [1, 5],
             Courses: [{
                 Id: 1,
+                TimesheetId: 1,
                 Title: "برنامه سازی 1",
                 Credit: 3,
                 Cost: 1580000,
@@ -173,7 +174,11 @@
                 var course = this;
                 $(coursesDiv).append(`<div data-id="${course.Id}" data-permit="${this.PermitType}"><span title>${this.Title}</span><br/><span credit>${this.Credit} واحد</span><span cost>${currencyFormat.format(this.Cost)} ریال</span></div>`);
             });
-            $(coursesDiv).droppable().children().each(function () {
+            $(coursesDiv).droppable({
+                drop: function (a, b) {
+                    $(b.helper[0]).removeAttr("landed").css("display", "inherit");
+                }
+            }).children().each(function () {
                 course = this;
                 $(course).draggable({
                     classes: {
@@ -193,10 +198,6 @@
                         return true;
                     },
                     start: function (a, b) {
-                        if ($(b.helper[0]).is('[landed]')) {
-                            $(`table > tbody > tr[data-id="${$(b.helper[0]).data("day")}"] > td[data-id="${$(b.helper[0]).data("time")}"]`).removeAttr("taken");
-                            $(b.helper[0]).removeAttr("landed").css("display", "inherit");
-                        }
                         var d = data.Courses.find(x => x.Id == $(b.helper[0]).data("id"));
                         d.Professors.sort();
                         for (var pi in d.Professors) {
@@ -206,23 +207,27 @@
                             if (pi % 3 == 0)
                                 color = `#${ch}${ch}ffee`;
                             else if (pi % 3 == 1)
-                                color = `#eeff${ch}${ch}`;                            
+                                color = `#eeff${ch}${ch}`;
                             $(prof.Timesheets).each(function () {
                                 t = this;
                                 var sel = `table > tbody > tr[data-id="${t.WeekDay}"] > td[data-id="${t.TimeType}"]`;
                                 $(sel).css("background-color", color).children("span").text(prof.Title);
                                 $(sel).droppable({
                                     accept: function (a) {
-                                        if ($(this).is('[taken]')) {
+                                        var c = data.Courses.find(x => x.Time == $(this).data("id") && x.Day == $(this).closest("tr").data("id"));
+                                        if (c != null && c.Id != d.Id) {
                                             return false;
                                         }
                                         if (!$(a).is(`div[data-id="${d.Id}"]`))
                                             return false;
                                         return true;
                                     },
-                                    drop: function (a, b) {
-                                        $(this).attr('taken', 'taken');
+                                    drop: function (a, b) {                                        
+                                        d.Time = $(this).data("id");
+                                        d.Day = $(this).closest("tr").data("id");
                                         $(b.helper[0]).attr("landed", "landed").css("display", "initial").data("time", $(this).data("id")).data("day", $(this).closest("tr").data("id"));
+                                        $(b.helper[0]).children("p[professor]").remove();
+                                        $(b.helper[0]).append(`<p [professor]>${prof.Title}</p>`);
                                     }
                                 });
                             });
