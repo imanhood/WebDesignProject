@@ -1,0 +1,85 @@
+﻿@model WebDesignProject.Models.ViewModels.StudentViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div semesters class="row">
+    <div class="col-12 mt-2">
+        <input type="hidden" id="studentid" value="@Model.Id" />
+        <div class="float-start">
+            <p student-title>نام: <span>@Model.Title</span></p>
+            <p student-average-mark>معدل کل: <span>@Model.AverageMark.ToString("#,##0.00")</span></p>
+            <p student-total-credit>تعداد واحد پاس شده: <span>@Model.TotalCredit</span></p>
+        </div>
+        <a class="btn btn-success float-end" href="/test-plugin-week.html">انتخاب واحد</a>
+    </div>
+    @foreach(var semester in Model.Semesters) {
+<div data-id="@semester.Id" semester class="col-sm-6 mt-2">
+    <table class="table table-bordered table-hover table-light">
+        <thead>
+            <tr>
+                <th semester-title colspan="5">@semester.Title</th>
+            </tr>
+            <tr>
+                <th>عنوان</th>
+                <th>مدرس</th>
+                <th>تئوری</th>
+                <th>عملی</th>
+                <th>نمره</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var course in semester.Courses) {
+                <tr>
+                    <td>@course.Title</td>
+                    <td>@course.ProfessorTitle</td>
+                    <td>@course.CreditT</td>
+                    <td>@course.CreditP</td>
+                    <td>@course.Mark</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">معدل: @semester.AverageMark.ToString("#,##0.00")</td>
+                <td colspan="2">واحد موثر: @semester.TotalCredit</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+    }
+</div>
+    <script>
+        @*$(document).ready(function () {
+            $.ajax({
+                method: "get",
+                type: "json",
+                url: "/student/GetDate/@Model",
+                success: function (data) {
+                    initialForm(data);
+                }
+            });
+        });*@
+    function initialForm(data) {
+        $("input#id").val(data.Id);
+        $("[student-title] span").text(data.Title);
+        $("[student-average-mark] span").text(data.AverageMark);
+        $("[student-total-credit] span").text(data.TotalCredit);
+        $(data.Semesters).each(function () {
+            semester = this;
+            $("div[semesters]").append(`<div data-id="${semester.Id}" semester class="col-sm-6 mt-2">` + $("[semester-template]").html() + '</div>');
+            var semesterDiv = $("div[semesters] [semester]").last();
+            $(semesterDiv).find("[semester-title]").text(semester.Title);
+            $(semester.Courses).each(function () {
+                var course = this;
+                $(semesterDiv).find("table > tbody").append(`<tr><td>${course.Title}</td><td>${course.ProfessorTitle}</td><td>${course.CreditT}</td><td>${course.CreditP}</td><td>${course.Mark}</td></tr>`);
+            });
+        });
+    }
+    </script>
+<style>
+    [semester-template] {
+        display: none;
+    }
+</style>
+

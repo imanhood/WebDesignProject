@@ -21,7 +21,7 @@ namespace WebDesignProject
         [StringLength(256)]
         public string Title { get; set; }
 
-        //public virtual ICollection<SemesterCourse> SemesterCourses { get; set; }
+        public virtual ICollection<SemesterCourse> SemesterCourses { get; set; }
 
         //public virtual ICollection<Student> Students { get; set; }
     }

@@ -24,6 +24,6 @@ namespace WebDesignProject
 
         //public virtual Semester Semester { get; set; }
 
-        //public virtual ICollection<StudentCourse> StudentCourses { get; set; }
+        public virtual ICollection<StudentCourse> StudentCourses { get; set; }
     }
 }

@@ -27,12 +27,12 @@ namespace WebDesignProject
 
         public byte WeekDay { get; set; }
 
-        //public virtual Course Course { get; set; }
+        public virtual Course Course { get; set; }
 
-        //public virtual Professor Professor { get; set; }
+        public virtual Professor Professor { get; set; }
 
-        //public virtual Semester Semester { get; set; }
+        public virtual Semester Semester { get; set; }
 
-        //public virtual ICollection<StudentCourse> StudentCourses { get; set; }
+        public virtual ICollection<StudentCourse> StudentCourses { get; set; }
     }
 }

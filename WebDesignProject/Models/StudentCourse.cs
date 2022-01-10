@@ -18,8 +18,8 @@ namespace WebDesignProject
 
         public double? Mark { get; set; }
 
-        //public virtual SemesterCourse SemesterCours { get; set; }
+        public virtual SemesterCourse SemesterCourse { get; set; }
 
-        //public virtual Student Student { get; set; }
+        public virtual Student Student { get; set; }
     }
 }

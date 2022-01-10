@@ -23,5 +23,8 @@ namespace WebDesignProject
         public byte CreditP { get; set; }
 
         public int Cost { get; set; }
+        public virtual ICollection<SemesterCourse> SemesterCourses { get; set; }
+        public virtual ICollection<Course> ParentCourses { get; set; }
+        public virtual ICollection<Course> ChildCourses { get; set; }
     }
 }

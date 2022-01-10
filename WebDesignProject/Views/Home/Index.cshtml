@@ -1,0 +1,32 @@
+﻿@model WebDesignProject.Models.ViewModels.HomeViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-sm-4">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>نام دانشجو</th>
+                    <th colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var student in Model.Students) {
+                <tr data-id="@student.Id">
+                    <td>
+                        <span>@student.Title</span>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" href="/Student/Index/@student.Id">پروفایل</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-success" href="/Student/Register/@student.Id">ثبت نام</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
