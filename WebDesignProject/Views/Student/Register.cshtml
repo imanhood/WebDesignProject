@@ -1,0 +1,310 @@
+﻿@model WebDesignProject.Models.ViewModels.RegisterViewModel
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "ثبت نام";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-sm-3">
+        <div courses>
+            @foreach(var course in Model.Courses) {
+            <div data-id="@course.Id" data-permit="@((int)course.PermitType)">
+                <span title>@course.Title</span>
+                @if(course.PermitType == WebDesignProject.Models.ViewModels.PermitTypeEnum.Passed) {
+                    <span reason>(پاس شده)</span>
+                } else if(course.PermitType == WebDesignProject.Models.ViewModels.PermitTypeEnum.HaveNotPassedPreCourses) {
+                    <span reason>(پیش نیاز)</span>
+                }
+                <br />
+                <span credit>@course.Credit واحد</span>
+                <span cost>@course.Cost.ToString("#,##0") ریال</span>
+            </div>
+            }
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>8-10</th>
+                    <th>10-12</th>
+                    <th>12-14</th>
+                    <th>14-16</th>
+                    <th>16-18</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-id="0">
+                    <td>شنبه</td>
+                    <td data-id="0"><span></span></td>
+                    <td data-id="1"><span></span></td>
+                    <td data-id="2"><span></span></td>
+                    <td data-id="3"><span></span></td>
+                    <td data-id="4"><span></span></td>
+                </tr>
+                <tr data-id="1">
+                    <td>یکشنبه</td>
+                    <td data-id="0"><span></span></td>
+                    <td data-id="1"><span></span></td>
+                    <td data-id="2"><span></span></td>
+                    <td data-id="3"><span></span></td>
+                    <td data-id="4"><span></span></td>
+                </tr>
+                <tr data-id="2">
+                    <td>دوشنبه</td>
+                    <td data-id="0"><span></span></td>
+                    <td data-id="1"><span></span></td>
+                    <td data-id="2"><span></span></td>
+                    <td data-id="3"><span></span></td>
+                    <td data-id="4"><span></span></td>
+                </tr>
+                <tr data-id="3">
+                    <td>سه شنبه</td>
+                    <td data-id="0"><span></span></td>
+                    <td data-id="1"><span></span></td>
+                    <td data-id="2"><span></span></td>
+                    <td data-id="3"><span></span></td>
+                    <td data-id="4"><span></span></td>
+                </tr>
+                <tr data-id="4">
+                    <td>چهارشنبه</td>
+                    <td data-id="0"><span></span></td>
+                    <td data-id="1"><span></span></td>
+                    <td data-id="2"><span></span></td>
+                    <td data-id="3"><span></span></td>
+                    <td data-id="4"><span></span></td>
+                </tr>
+                <tr data-id="5">
+                    <td>پنجشنبه</td>
+                    <td data-id="0"><span></span></td>
+                    <td data-id="1"><span></span></td>
+                    <td data-id="2"><span></span></td>
+                    <td data-id="3"><span></span></td>
+                    <td data-id="4"><span></span></td>
+                </tr>
+                <tr data-id="6">
+                    <td>جمعه</td>
+                    <td data-id="0"><span></span></td>
+                    <td data-id="1"><span></span></td>
+                    <td data-id="2"><span></span></td>
+                    <td data-id="3"><span></span></td>
+                    <td data-id="4"><span></span></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="3" total-credit>جمع واحد: <span>0</span></th>
+                    <th colspan="3" total-cost>مبلغ شهریه: <span>0</span></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        data = @(Html.Raw(JsonConvert.SerializeObject(Model)));
+        var coursesDiv = $("div[courses]");
+        $(coursesDiv).droppable({
+            drop: function (a, b) {
+                $(b.helper[0]).removeAttr("landed").css({ "display": "inherit", "top": 0, "left": 0 });
+                var d = data.Courses.find(x => x.Id == $(b.helper[0]).data("id"));
+                d.Time = null;
+                d.Day = null;
+                setTimeout(function () {
+                    $(data.Courses).each(function () {
+                        correctCoursePosition(this.Id);
+                    });
+                }, 40);
+                fillFooter();
+            }
+        }).children('[data-permit="0"]').each(function () {
+            course = this;
+            $(course).draggable({
+                classes: {
+                    "ui-droppable-active": "ui-state-highlight"
+                },
+                revert: "invalid",
+                stop: function (a, b) {
+                    var d = data.Courses.find(x => x.Id == $(b.helper[0]).data("id"));
+                    $(d.Professors).each(function () {
+                        var prof = this;
+                        $(prof.Timesheets).each(function () {
+                            t = this;
+                            var sel = `table > tbody > tr[data-id="${t.WeekDay}"] > td[data-id="${t.TimeType}"]`;
+                            $(sel).css("background-color", "#fff").children("span").text('');
+                        });
+                    });
+                    return true;
+                },
+                start: function (a, b) {
+                    var d = data.Courses.find(x => x.Id == $(b.helper[0]).data("id"));
+                    d.Professors.sort();
+                    for (var pi in d.Professors) {
+                        var prof = d.Professors[pi];
+                        var ch = (10 + ((pi * 7) % 5)).toString(16);
+                        var color = "#ffaaaa";
+                        if (pi % 3 == 0)
+                            color = `#${ch}${ch}ffee`;
+                        else if (pi % 3 == 1)
+                            color = `#eeff${ch}${ch}`;
+                        $(prof.Timesheets).each(function () {
+                            t = this;
+                            var sel = `table > tbody > tr[data-id="${t.WeekDay}"] > td[data-id="${t.TimeType}"]`;
+                            $(sel).css("background-color", color).data("professorid", prof.Id).children("span").text(prof.Title);
+                            $(sel).droppable({
+                                accept: function (a) {
+                                    var c = data.Courses.find(x => x.Time == $(this).data("id") && x.Day == $(this).closest("tr").data("id"));
+                                    if (c != null && c.Id != d.Id) {
+                                        return false;
+                                    }
+                                    if (!$(a).is(`div[data-id="${d.Id}"]`))
+                                        return false;
+                                    return true;
+                                },
+                                drop: function (a, b) {
+                                    var td = this;
+                                    var d = data.Courses.find(x => x.Id == $(b.helper[0]).data("id"));
+                                    d.Time = $(this).data("id");
+                                    d.Day = $(this).closest("tr").data("id");
+                                    $(b.helper[0]).children("span[professor]").remove();
+                                    $(b.helper[0]).append(`<span professor>${$(this).children("span").text()}</span>`);
+                                    $(b.helper[0]).attr("landed", "landed").css("display", "inline-table").data("time", $(this).data("id")).data("day", $(this).closest("tr").data("id"));
+                                    setTimeout(function () {
+                                        $(data.Courses).each(function () {
+                                            correctCoursePosition(this.Id);
+                                        });
+                                    }, 40);
+                                    fillFooter();
+                                }
+                            });
+                        });
+                    }
+                }
+            });
+        });
+    });
+    function correctCoursePosition(courseId) {
+        var course = $(`[courses] > div[data-id="${courseId}"]`);
+        if ($(course).is("[landed]")) {
+            var td = $(`table > tbody > tr[data-id="${$(course).data("day")}"] > td[data-id="${$(course).data("time")}"]`);
+            var top = $(td).offset().top - $(course).offset().top + parseInt($(course).css("top")) + ($(td).height() - $(course).height()) / 2;
+            var left = $(td).offset().left - $(course).offset().left + parseInt($(course).css("left")) + ($(td).width() - $(course).width()) / 2;
+            $(course).css({ "top": top + "px", "left": left + "px" });
+        } else {
+            $(course).css({ "top": 0, "left": 0 });
+        }
+    }
+    function fillFooter() {
+        var totalCredit = 0;
+        var totalCost = 0;
+        var currencyFormat = new Intl.NumberFormat({ style: 'currency' });
+        $(data.Courses).each(function () {
+            if (this.Time != null && this.Day != null) {
+                totalCredit += this.Credit;
+                totalCost += this.Cost;
+            }
+        });
+        $("table > tfoot [total-credit] span").text(totalCredit);
+        $("table > tfoot [total-cost] span").text(currencyFormat.format(totalCost));
+    }
+</script>
+<style>
+    table > tbody > tr > td[data-id] {
+        max-width: 1px;
+        min-width: 1%;
+    }
+
+        table > tbody > tr > td[data-id] > span {
+            font-size: small;
+            height: 70px;
+            display: block;
+        }
+
+    [courses] {
+        border: 1px solid #ddd;
+    }
+
+        [courses] > div {
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            white-space: nowrap;
+        }
+
+            [courses] > div[data-permit="0"] {
+                background-color: #fff;
+            }
+
+                [courses] > div[data-permit="0"]:hover {
+                    box-shadow: 2px 2px 4px #ddd;
+                    cursor: grab;
+                    user-select: none;
+                    z-index: 1;
+                }
+
+            [courses] > div[data-permit="1"] {
+                background-color: #f5f5f5;
+                border-color: #f5f5f5;
+            }
+
+            [courses] > div[data-permit="2"] {
+                background-color: #f5e0e0;
+                border-color: #f5e0e0;
+            }
+
+            [courses] > div > span[credit] {
+                font-size: x-small;
+            }
+            
+            [courses] > div > span[reason] {
+                font-size: x-small;
+                text-align:center;
+            }
+
+            [courses] > div > span[cost] {
+                font-size: x-small;
+                float: left;
+            }
+
+            [courses] > div > span[professor] {
+                font-size: x-small;
+            }
+
+            [courses] > div:is([landed]) > span[credit] {
+                display: none;
+            }
+
+            [courses] > div:is([landed]) > span[reason] {
+                display: none;
+            }
+
+            [courses] > div:is([landed]) > span[cost] {
+                display: none;
+            }
+
+            [courses] > div:not([landed]) > span[professor] {
+                display: none;
+            }
+
+            [courses] > div.ui-draggable.ui-draggable-dragging {
+                width: 100px;
+            }
+
+        [courses].ui-droppable-active > div[landed].ui-draggable:not(.ui-draggable-dragging) {
+            opacity: 0.3;
+        }
+
+        [courses] > div.ui-draggable.ui-draggable-dragging > span[credit] {
+            display: none;
+        }
+
+        [courses] > div.ui-draggable.ui-draggable-dragging > span[cost] {
+            display: none;
+        }
+
+    .ui-droppable.ui-droppable-hover {
+        box-shadow: 2px 2px 4px #aaa !important;
+        border-width: 3px !important;
+    }
+</style>

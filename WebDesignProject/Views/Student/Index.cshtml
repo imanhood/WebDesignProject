@@ -1,6 +1,6 @@
 ﻿@model WebDesignProject.Models.ViewModels.StudentViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "پروفایل دانشجو " + Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div semesters class="row">
@@ -11,9 +11,10 @@
             <p student-average-mark>معدل کل: <span>@Model.AverageMark.ToString("#,##0.00")</span></p>
             <p student-total-credit>تعداد واحد پاس شده: <span>@Model.TotalCredit</span></p>
         </div>
-        <a class="btn btn-success float-end" href="/test-plugin-week.html">انتخاب واحد</a>
+        <a class="btn btn-success float-end" href="/Student/Register/@Model.Id">انتخاب واحد</a>
     </div>
-    @foreach(var semester in Model.Semesters) {
+    @if(Model.Semesters != null) {
+        foreach(var semester in Model.Semesters) {
 <div data-id="@semester.Id" semester class="col-sm-6 mt-2">
     <table class="table table-bordered table-hover table-light">
         <thead>
@@ -47,6 +48,7 @@
         </tfoot>
     </table>
 </div>
+        }
     }
 </div>
     <script>
