@@ -7,19 +7,19 @@
 
 <div class="row">
     <div class="col-sm-3">
-        <div courses>
+        <div courses class="courses">
             @foreach(var course in Model.Courses) {
-            <div data-id="@course.Id" data-permit="@((int)course.PermitType)">
-                <span title>@course.Title</span>
-                @if(course.PermitType == WebDesignProject.Models.ViewModels.PermitTypeEnum.Passed) {
-                    <span reason>(پاس شده)</span>
-                } else if(course.PermitType == WebDesignProject.Models.ViewModels.PermitTypeEnum.HaveNotPassedPreCourses) {
-                    <span reason>(پیش نیاز)</span>
-                }
-                <br />
-                <span credit>@course.Credit واحد</span>
-                <span cost>@course.Cost.ToString("#,##0") ریال</span>
-            </div>
+                <div data-id="@course.Id" data-permit="@((int)course.PermitType)">
+                    <span title>@course.Title</span>
+                    @if(course.PermitType == WebDesignProject.Models.ViewModels.PermitTypeEnum.Passed) {
+                        <span reason>(پاس شده)</span>
+                    } else if(course.PermitType == WebDesignProject.Models.ViewModels.PermitTypeEnum.HaveNotPassedPreCourses) {
+                        <span reason>(پیش نیاز)</span>
+                    }
+                    <br />
+                    <span credit>@course.Credit واحد</span>
+                    <span cost>@course.Cost.ToString("#,##0") ریال</span>
+                </div>
             }
         </div>
     </div>
@@ -106,9 +106,11 @@
     $(document).ready(function () {
         data = @(Html.Raw(JsonConvert.SerializeObject(Model)));
         var coursesDiv = $("div[courses]");
+        $(coursesDiv).after('<div courses-back class="courses">' + $(coursesDiv).html() + '</div>');
+        $("div[courses-back]").css("top", ($(coursesDiv).offset().top - $("div[courses-back]").offset().top) + "px");
         $(coursesDiv).droppable({
             drop: function (a, b) {
-                $(b.helper[0]).removeAttr("landed").css({ "display": "inherit", "top": 0, "left": 0 });
+                $(b.helper[0]).removeAttr("landed").css({ "display": "", "top": 0, "left": 0, "width": "" });
                 var d = data.Courses.find(x => x.Id == $(b.helper[0]).data("id"));
                 d.Time = null;
                 d.Day = null;
@@ -170,7 +172,7 @@
                                     d.Day = $(this).closest("tr").data("id");
                                     $(b.helper[0]).children("span[professor]").remove();
                                     $(b.helper[0]).append(`<span professor>${$(this).children("span").text()}</span>`);
-                                    $(b.helper[0]).attr("landed", "landed").css("display", "inline-table").data("time", $(this).data("id")).data("day", $(this).closest("tr").data("id"));
+                                    $(b.helper[0]).attr("landed", "landed").data("time", $(this).data("id")).data("day", $(this).closest("tr").data("id"));
                                     setTimeout(function () {
                                         $(data.Courses).each(function () {
                                             correctCoursePosition(this.Id);
@@ -189,6 +191,7 @@
         var course = $(`[courses] > div[data-id="${courseId}"]`);
         if ($(course).is("[landed]")) {
             var td = $(`table > tbody > tr[data-id="${$(course).data("day")}"] > td[data-id="${$(course).data("time")}"]`);
+            $(course).css("width", ($(td).width() - 5) + "px");
             var top = $(td).offset().top - $(course).offset().top + parseInt($(course).css("top")) + ($(td).height() - $(course).height()) / 2;
             var left = $(td).offset().left - $(course).offset().left + parseInt($(course).css("left")) + ($(td).width() - $(course).width()) / 2;
             $(course).css({ "top": top + "px", "left": left + "px" });
@@ -222,89 +225,99 @@
             display: block;
         }
 
-    [courses] {
+    .courses {
         border: 1px solid #ddd;
     }
 
-        [courses] > div {
+        .courses[courses-back] {
+            position: relative;
+            opacity: 0.3;
+            user-select: none;
+            z-index: -1;
+        }
+
+        .courses > div {
             border: 1px solid #ddd;
             padding: 5px 10px;
             white-space: nowrap;
         }
 
-            [courses] > div[data-permit="0"] {
+            .courses > div[data-permit="0"] {
                 background-color: #fff;
             }
 
-                [courses] > div[data-permit="0"]:hover {
-                    box-shadow: 2px 2px 4px #ddd;
-                    cursor: grab;
-                    user-select: none;
-                    z-index: 1;
-                }
+    [courses] > div[data-permit="0"]:hover {
+        box-shadow: 2px 2px 4px #ddd;
+        cursor: grab;
+        user-select: none;
+        z-index: 1;
+    }
 
-            [courses] > div[data-permit="1"] {
-                background-color: #f5f5f5;
-                border-color: #f5f5f5;
-            }
+    [courses] > div[data-permit="1"] {
+        background-color: #f5f5f5;
+        border-color: #f5f5f5;
+    }
 
-            [courses] > div[data-permit="2"] {
-                background-color: #f5e0e0;
-                border-color: #f5e0e0;
-            }
+    [courses] > div[data-permit="2"] {
+        background-color: #f5e0e0;
+        border-color: #f5e0e0;
+    }
 
-            [courses] > div > span[credit] {
-                font-size: x-small;
-            }
-            
-            [courses] > div > span[reason] {
-                font-size: x-small;
-                text-align:center;
-            }
+    .courses > div > span[credit] {
+        font-size: x-small;
+    }
 
-            [courses] > div > span[cost] {
-                font-size: x-small;
-                float: left;
-            }
+    .courses > div > span[reason] {
+        font-size: x-small;
+        text-align: center;
+    }
 
-            [courses] > div > span[professor] {
-                font-size: x-small;
-            }
+    .courses > div > span[cost] {
+        font-size: x-small;
+        float: left;
+    }
 
-            [courses] > div:is([landed]) > span[credit] {
-                display: none;
-            }
+    [courses] > div > span[professor] {
+        font-size: x-small;
+    }
 
-            [courses] > div:is([landed]) > span[reason] {
-                display: none;
-            }
+    [courses] > div:is([landed]) {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-            [courses] > div:is([landed]) > span[cost] {
-                display: none;
-            }
+    [courses] > div:is([landed]) > span[credit] {
+        display: none;
+    }
 
-            [courses] > div:not([landed]) > span[professor] {
-                display: none;
-            }
+    [courses] > div:is([landed]) > span[reason] {
+        display: none;
+    }
 
-            [courses] > div.ui-draggable.ui-draggable-dragging {
-                width: 100px;
-            }
+    [courses] > div:is([landed]) > span[cost] {
+        display: none;
+    }
 
-        [courses].ui-droppable-active > div[landed].ui-draggable:not(.ui-draggable-dragging) {
-            opacity: 0.3;
-        }
+    [courses] > div:not([landed]) > span[professor] {
+        display: none;
+    }
 
-        [courses] > div.ui-draggable.ui-draggable-dragging > span[credit] {
-            display: none;
-        }
+    [courses] > div.ui-draggable.ui-draggable-dragging {
+        display: inline-table;
+    }
 
-        [courses] > div.ui-draggable.ui-draggable-dragging > span[cost] {
-            display: none;
-        }
+    [courses].ui-droppable-active > div[landed].ui-draggable:not(.ui-draggable-dragging) {
+        opacity: 0.3;
+    }
+
+    [courses] > div.ui-draggable.ui-draggable-dragging > span[cost] {
+        display: none;
+    }
 
     .ui-droppable.ui-droppable-hover {
         box-shadow: 2px 2px 4px #aaa !important;
-        border-width: 3px !important;
+        outline: 3px solid #666 !important;
     }
 </style>
