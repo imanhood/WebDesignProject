@@ -15,12 +15,14 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-  build:
-    runs-on: windows-latest
-
+        
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v2
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
       env:
@@ -43,18 +45,11 @@ jobs:
     - name: Build Solution
       run: |
         msbuild.exe WebDesignProject.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
-        
-  web-deploy:
-    name: 🎉 Deploy
-    runs-on: ubuntu-latest
-    steps:
-    - name: 🚚 Get latest code
-      uses: actions/checkout@v2
-    
+
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
         server: ftp.alefbayeman.ir
         username: webdesign
         password: "!Q3n6i0w"
-        security: strict
+        protocol: ftps
