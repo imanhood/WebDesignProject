@@ -42,8 +42,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3">معدل: @semester.AverageMark.ToString("#,##0.00")</td>
-                <td colspan="2">واحد موثر: @semester.TotalCredit</td>
+                <td colspan="2">معدل: @semester.AverageMark.ToString("#,##0.00")</td>
+                <td colspan="3">واحد موثر: @semester.TotalCredit</td>
             </tr>
         </tfoot>
     </table>
@@ -52,16 +52,6 @@
     }
 </div>
     <script>
-        @*$(document).ready(function () {
-            $.ajax({
-                method: "get",
-                type: "json",
-                url: "/student/GetDate/@Model",
-                success: function (data) {
-                    initialForm(data);
-                }
-            });
-        });*@
     function initialForm(data) {
         $("input#id").val(data.Id);
         $("[student-title] span").text(data.Title);
