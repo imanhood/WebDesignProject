@@ -1,9 +1,6 @@
 name: GitHub Actions Demo
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
-    runs-on: ubuntu-latest
-    steps:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
