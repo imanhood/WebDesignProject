@@ -25,11 +25,7 @@ jobs:
     - name: Build Solution
       run: |
         msbuild.exe EzRep.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
-        
-  web-deploy:
-    name: 🎉 Deploy
-    runs-on: ubuntu-latest
-    steps:
+          
     - name: 🚚 Get latest code
       uses: actions/checkout@v2
     
@@ -39,4 +35,4 @@ jobs:
         server: ftp.alefbayeman.ir
         username: webdesign
         password: "!Q3n6i0w"
-        security: loose
+        security: strict
