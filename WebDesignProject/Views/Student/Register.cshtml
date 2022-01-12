@@ -12,9 +12,9 @@
                 <div data-id="@course.Id" data-permit="@((int)course.PermitType)">
                     <span title>@course.Title</span>
                     @if(course.PermitType == WebDesignProject.Models.ViewModels.PermitTypeEnum.Passed) {
-                        <span reason>(پاس شده)</span>
+                        <span reason>(پاس شده <i class="fa fa-check"></i>)</span>
                     } else if(course.PermitType == WebDesignProject.Models.ViewModels.PermitTypeEnum.HaveNotPassedPreCourses) {
-                        <span reason>(پیش نیاز)</span>
+                        <span reason>(پیش نیاز <i class="fa fa-lock"></i>)</span>
                     }
                     <br />
                     <span credit>@course.Credit واحد</span>
