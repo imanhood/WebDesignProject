@@ -107,7 +107,7 @@
         data = @(Html.Raw(JsonConvert.SerializeObject(Model)));
         var coursesDiv = $("div[courses]");
         $(coursesDiv).after('<div courses-back class="courses">' + $(coursesDiv).html() + '</div>');
-        $("div[courses-back]").css("top", ($(coursesDiv).offset().top - $("div[courses-back]").offset().top) + "px");
+        $("div[courses-back]").css({ "top": $(coursesDiv).offset().top + "px", "width": ($(coursesDiv).width() + 2) + "px" });
         $(coursesDiv).droppable({
             drop: function (a, b) {
                 $(b.helper[0]).removeAttr("landed").css({ "display": "", "top": 0, "left": 0, "width": "" });
@@ -230,7 +230,7 @@
     }
 
         .courses[courses-back] {
-            position: relative;
+            position: absolute;
             opacity: 0.3;
             user-select: none;
             z-index: -1;
