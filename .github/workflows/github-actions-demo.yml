@@ -13,4 +13,4 @@ jobs:
       with:
         server: alefbayeman.ir
         username: webdesign
-        password: !Q3n6i0w
+        password: "!Q3n6i0w"
