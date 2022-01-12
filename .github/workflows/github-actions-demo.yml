@@ -14,3 +14,4 @@ jobs:
         server: alefbayeman.ir
         username: webdesign
         password: "!Q3n6i0w"
+        security: loose
