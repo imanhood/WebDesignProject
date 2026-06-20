@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/shiva-video-package.schema.json",
+  "title": "SHIVA TRUVFY Video Production Package",
+  "type": "object",
+  "required": [
+    "project",
+    "verification",
+    "strategy",
+    "scenes",
+    "assets",
+    "voiceover",
+    "captions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["businessOrProduct", "goal", "platform", "durationSeconds", "tone", "brandColors"],
+      "additionalProperties": false,
+      "properties": {
+        "businessOrProduct": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "audience": { "type": "string" },
+        "offer": { "type": "string" },
+        "goal": { "enum": ["awareness", "sales", "leads", "booking", "launch"] },
+        "platform": { "enum": ["TikTok", "Instagram Reels", "YouTube Shorts", "Facebook Reels", "LinkedIn"] },
+        "durationSeconds": { "enum": [6, 8, 10, 12, 15] },
+        "tone": { "enum": ["professional", "luxury", "fun", "emotional", "bold", "inspirational"] },
+        "brandColors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "website": { "type": "string" },
+        "logo": { "type": "string" }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["sourcesUsed", "independentSourceCount", "verifiedClaims", "excludedClaims", "confidenceScore"],
+      "additionalProperties": false,
+      "properties": {
+        "sourcesUsed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "urlOrPath", "type"],
+            "additionalProperties": false,
+            "properties": {
+              "title": { "type": "string" },
+              "urlOrPath": { "type": "string" },
+              "type": { "enum": ["website", "uploaded_document", "independent_source", "business_input"] }
+            }
+          }
+        },
+        "independentSourceCount": { "type": "integer", "minimum": 0 },
+        "verifiedClaims": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/claim" }
+        },
+        "excludedClaims": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/claim" }
+        },
+        "confidenceScore": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "strategy": {
+      "type": "object",
+      "required": ["coreMessage", "primaryBenefit", "marketingAngle", "audienceProfile", "emotionalTrigger", "desiredAction", "ctaStrategy"],
+      "additionalProperties": false,
+      "properties": {
+        "coreMessage": { "type": "string" },
+        "primaryBenefit": { "type": "string" },
+        "marketingAngle": { "type": "string" },
+        "audienceProfile": { "type": "string" },
+        "emotionalTrigger": { "type": "string" },
+        "desiredAction": { "type": "string" },
+        "ctaStrategy": { "type": "string" }
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["sceneId", "startTime", "endTime", "duration", "purpose", "visualDescription", "cameraMovement", "overlayText", "voiceoverText", "transition"],
+        "additionalProperties": false,
+        "properties": {
+          "sceneId": { "type": "string" },
+          "startTime": { "type": "number", "minimum": 0 },
+          "endTime": { "type": "number", "exclusiveMinimum": 0 },
+          "duration": { "type": "number", "exclusiveMinimum": 0 },
+          "purpose": { "type": "string" },
+          "visualDescription": { "type": "string" },
+          "cameraMovement": { "type": "string" },
+          "overlayText": { "type": "string" },
+          "voiceoverText": { "type": "string" },
+          "transition": { "type": "string" }
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["assetType", "description", "required", "usage"],
+        "additionalProperties": false,
+        "properties": {
+          "assetType": { "enum": ["image", "video_clip", "logo", "icon", "background", "music", "sound_effect"] },
+          "description": { "type": "string" },
+          "required": { "type": "boolean" },
+          "usage": { "type": "string" }
+        }
+      }
+    },
+    "voiceover": {
+      "type": "object",
+      "required": ["script", "wordCount", "targetWordsPerSecond"],
+      "additionalProperties": false,
+      "properties": {
+        "script": { "type": "string" },
+        "wordCount": { "type": "integer", "minimum": 0 },
+        "targetWordsPerSecond": { "type": "number", "minimum": 0 }
+      }
+    },
+    "captions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["index", "start", "end", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "index": { "type": "integer", "minimum": 1 },
+          "start": { "type": "string", "pattern": "^[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}$" },
+          "end": { "type": "string", "pattern": "^[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}$" },
+          "text": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "required": ["claim", "status", "supportingSources", "usageDecision"],
+      "additionalProperties": false,
+      "properties": {
+        "claim": { "type": "string" },
+        "status": { "enum": ["Verified", "Supported", "Weak Support", "Unverified", "Disputed"] },
+        "supportingSources": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "usageDecision": { "enum": ["use", "exclude"] },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}
